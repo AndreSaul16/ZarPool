@@ -1,0 +1,71 @@
+{
+    "database": {
+        "rules": {
+            ".read": "auth != null",
+            ".write": "auth != null",
+            "users": {
+                "$uid": {
+                    ".read": "auth != null",
+                    ".write": "auth.uid == $uid",
+                    ".validate": "newData.hasChildren(['email', 'name', 'phone'])"
+                }
+            },
+            "trips": {
+                "$tripId": {
+                    ".read": "auth != null",
+                    ".write": "auth != null && (
+            !data.exists() && auth.uid == newData.child('driverId').val() ||
+            data.exists() && auth.uid == data.child('driverId').val()
+          )",".validate": "newData.hasChildren(['driverId', 'origin', 'destination', 'departureTime', 'availableSeats', 'price'])",
+                    "passengers": {
+                        "$passengerId": {
+                            ".write": "auth.uid == $passengerId || auth.uid == root.child('trips').child($tripId).child('driverId').val()"
+                        }
+                    }
+                }
+            },
+            "pickups": {
+                "$pickupId": {
+                    ".read": "auth != null && (
+            auth.uid == data.child('passengerId').val() ||
+            auth.uid == root.child('trips').child(data.child('tripId').val()).child('driverId').val()
+          )",".write": "auth != null && (
+            !data.exists() && auth.uid == newData.child('passengerId').val() ||
+            data.exists() && (
+              auth.uid == data.child('passengerId').val() ||
+              auth.uid == root.child('trips').child(data.child('tripId').val()).child('driverId').val()
+            )
+          )",".validate": "newData.hasChildren(['tripId', 'passengerId', 'passengerName', 'location', 'status'])"
+                }
+            },
+            "reviews": {
+                "$reviewId": {
+                    ".read": "auth != null",
+                    ".write": "auth != null && auth.uid == newData.child('reviewerId').val()",
+                    ".validate": "newData.hasChildren(['tripId', 'reviewerId', 'reviewedUserId', 'rating'])"
+                }
+            },
+            "notifications": {
+                "$userId": {
+                    "$notificationId": {
+                        ".read": "auth.uid == $userId",
+                        ".write": "auth != null"
+                    }
+                }
+            },
+            "messages": {
+                "$tripId": {
+                    ".read": "auth != null && (
+            auth.uid == root.child('trips').child($tripId).child('driverId').val() ||
+            root.child('trips').child($tripId).child('passengers').child(auth.uid).exists()
+          )","$messageId": {
+                        ".write": "auth != null && (
+              auth.uid == root.child('trips').child($tripId).child('driverId').val() ||
+              root.child('trips').child($tripId).child('passengers').child(auth.uid).exists()
+            )"
+                    }
+                }
+            }
+        }
+    }
+}
