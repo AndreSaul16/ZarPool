@@ -126,7 +126,7 @@ const LoginScreen = () => {
             disabled={isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator color={colors.background} />
+              <ActivityIndicator color="#ffffff" />
             ) : (
               <Text style={styles.buttonText}>
                 {isRegistering ? 'Registrarse' : 'Iniciar Sesión'}
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
-    color: colors.text,
+    color: colors.textDark,
     textAlign: 'center',
   },
   form: {
@@ -182,13 +182,13 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 56,
-    borderColor: colors.secondary,
+    borderColor: colors.border,
     borderWidth: 2,
     borderRadius: 12,
     paddingHorizontal: 20,
     marginBottom: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    color: colors.background,
+    backgroundColor: '#ffffff',
+    color: colors.textDark,
     fontSize: 16,
   },
   button: {
@@ -199,24 +199,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 12,
     marginTop: 8,
-    shadowColor: colors.accent,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
     elevation: 4,
   },
   buttonText: {
-    color: colors.background,
+    color: '#ffffff',
     fontSize: 18,
     fontWeight: 'bold',
   },
   toggleButton: {
     marginTop: 24,
     alignItems: 'center',
+    padding: 8,
   },
   toggleText: {
-    color: colors.accent,
+    color: colors.link,
     fontSize: 16,
+    fontWeight: '600',
     textDecorationLine: 'underline',
   },
 });
